@@ -224,7 +224,7 @@
             <p id="currentDate"></p>
         </div>
     </div>
-    <script>
+   <script>
     (function() { // Start of the IIFE
 
         const totalDays = 75;
@@ -235,10 +235,10 @@
         // Get references to all elements we'll interact with
         const currentDayDisplay = document.getElementById('currentDayDisplay');
         const dailyTaskDay = document.getElementById('dailyTaskDay');
-        const markCompleteDaySpan = document.getElementById('markCompleteDay'); // Renamed for clarity (it's a span)
-        const markFailDaySpan = document.getElementById('markFailDay');       // Renamed
-        const notesDaySpan = document.getElementById('notesDay');             // Renamed
-        const saveNotesButtonDaySpan = document.getElementById('saveNotesButtonDay'); // Renamed
+        const markCompleteDaySpan = document.getElementById('markCompleteDay');
+        const markFailDaySpan = document.getElementById('markFailDay');
+        const notesDaySpan = document.getElementById('notesDay');
+        const saveNotesButtonDaySpan = document.getElementById('saveNotesButtonDay');
 
         const dayGrid = document.getElementById('dayGrid');
         const taskList = document.getElementById('taskList');
@@ -247,24 +247,22 @@
         const bookTitleInput = document.getElementById('bookTitle');
         const checkboxes = taskList.querySelectorAll('input[type="checkbox"]');
 
-        // References to buttons using their classes/types for now.
-        // We'll give them IDs later for more precise targeting if needed.
-        const completeBtn = document.querySelector('.complete-btn');
-        const failBtn = document.querySelector('.fail-btn');
-        const resetTodayBtn = document.querySelector('button.reset-btn[style="margin-top:10px;"]'); // Specific selector for "Reset Today's Tasks"
-        const saveNotesBtn = document.querySelector('.notes-section button'); // The "Save Notes" button
-        const resetEntireChallengeBtn = document.querySelector('button.reset-btn[style="background-color: #d32f2f; margin-top:10px;"]'); // Specific selector for "Reset Entire Challenge"
+         // References to buttons using their new IDs
+        const markCompleteButton = document.getElementById('markCompleteButton');
+        const markFailButton = document.getElementById('markFailButton');
+        const resetDailyTasksButton = document.getElementById('resetDailyTasksButton');
+        const saveNotesButton = document.getElementById('saveNotesButton');
+        const resetEntireChallengeButton = document.getElementById('resetEntireChallengeButton');
 
-
-        // --- Functions (now defined inside the IIFE) ---
+        // --- Functions ---
 
         function updateDayDisplays() {
             currentDayDisplay.textContent = currentDay;
             dailyTaskDay.textContent = currentDay;
-            markCompleteDaySpan.textContent = currentDay; // Use cached reference
-            markFailDaySpan.textContent = currentDay;     // Use cached reference
-            notesDaySpan.textContent = currentDay;        // Use cached reference
-            saveNotesButtonDaySpan.textContent = currentDay; // Use cached reference
+            markCompleteDaySpan.textContent = currentDay;
+            markFailDaySpan.textContent = currentDay;
+            notesDaySpan.textContent = currentDay;
+            saveNotesButtonDaySpan.textContent = currentDay;
         }
 
         function generateDayGrid() {
@@ -281,8 +279,8 @@
                         daySquare.classList.add('failed');
                     }
                 }
-                // We will add the event listener here in the next step
-                // daySquare.onclick = () => navigateToDay(i); // This will be changed
+                // *** IMPORTANT FIX HERE: Change .onclick to .addEventListener('click', ...) ***
+                daySquare.addEventListener('click', () => navigateToDay(i));
                 dayGrid.appendChild(daySquare);
             }
         }
@@ -295,7 +293,7 @@
         }
 
         function allTasksChecked() {
-            for (let checkbox of checkboxes) { // Use cached reference
+            for (let checkbox of checkboxes) {
                 if (!checkbox.checked) return false;
             }
             return true;
@@ -338,20 +336,19 @@
         }
 
         function resetDailyTasks() {
-            checkboxes.forEach(checkbox => checkbox.checked = false); // Use cached reference
-            // We don't clear diet plan or book title as they might persist
+            checkboxes.forEach(checkbox => checkbox.checked = false);
         }
 
         function saveNotes() {
-            const notes = dailyNotes.value; // Use cached reference
-            const diet = dietPlanInput.value; // Use cached reference
-            const book = bookTitleInput.value; // Use cached reference
+            const notes = dailyNotes.value;
+            const diet = dietPlanInput.value;
+            const book = bookTitleInput.value;
             if (!challengeData[currentDay]) challengeData[currentDay] = {};
             challengeData[currentDay].notes = notes;
             challengeData[currentDay].dietPlan = diet;
             challengeData[currentDay].bookTitle = book;
             challengeData[currentDay].tasks = {};
-            checkboxes.forEach(cb => { // Use cached reference
+            checkboxes.forEach(cb => {
                 challengeData[currentDay].tasks[cb.id] = cb.checked;
             });
             saveChallengeData();
@@ -360,25 +357,25 @@
 
         function loadDayData(day) {
             resetDailyTasks(); // Clear previous day's checks
-            dailyNotes.value = ''; // Clear notes field // Use cached reference
+            dailyNotes.value = '';
 
             if (challengeData[day]) {
-                dailyNotes.value = challengeData[day].notes || ''; // Use cached reference
-                dietPlanInput.value = challengeData[day].dietPlan || (challengeData[day-1]?.dietPlan || ''); // Use cached reference
-                bookTitleInput.value = challengeData[day].bookTitle || (challengeData[day-1]?.bookTitle || ''); // Use cached reference
+                dailyNotes.value = challengeData[day].notes || '';
+                dietPlanInput.value = challengeData[day].dietPlan || (challengeData[day-1]?.dietPlan || '');
+                bookTitleInput.value = challengeData[day].bookTitle || (challengeData[day-1]?.bookTitle || '');
                 if (challengeData[day].tasks) {
-                    checkboxes.forEach(cb => { // Use cached reference
+                    checkboxes.forEach(cb => {
                         cb.checked = challengeData[day].tasks[cb.id] || false;
                     });
                 }
             } else {
                 // If no data for this day, try to carry over diet/book from previous day
                 if (challengeData[day-1]) {
-                    dietPlanInput.value = challengeData[day-1].dietPlan || ''; // Use cached reference
-                    bookTitleInput.value = challengeData[day-1].bookTitle || ''; // Use cached reference
+                    dietPlanInput.value = challengeData[day-1].dietPlan || '';
+                    bookTitleInput.value = challengeData[day-1].bookTitle || '';
                 } else {
-                    dietPlanInput.value = ''; // Use cached reference
-                    bookTitleInput.value = ''; // Use cached reference
+                    dietPlanInput.value = '';
+                    bookTitleInput.value = '';
                 }
             }
         }
@@ -420,22 +417,34 @@
             updateDayDisplays();
             generateDayGrid();
             resetDailyTasks();
-            dailyNotes.value = ''; // Use cached reference
-            dietPlanInput.value = ''; // Use cached reference
-            bookTitleInput.value = ''; // Use cached reference
+            dailyNotes.value = '';
+            dietPlanInput.value = '';
+            bookTitleInput.value = '';
             alert("Challenge has been reset to Day 1.");
             loadDayData(currentDay);
         }
 
-        // --- Initialization ---
-        // Set current date in footer
+        // --- Event Listeners Initialization ---
+        // This function defines all the event listeners
+        function initEventListeners() {
+            markCompleteButton.addEventListener('click', markDayComplete);
+            markFailButton.addEventListener('click', markDayFailed);
+            resetDailyTasksButton.addEventListener('click', resetDailyTasks);
+            saveNotesButton.addEventListener('click', saveNotes);
+            resetEntireChallengeButton.addEventListener('click', resetChallengeConfirmation);
+            // Checkboxes will get their auto-save listeners in a later step
+        }
+
+        // --- GLOBAL INITIALIZATION CALLS ---
+        // These calls execute when the script first loads
+        // Set current date in footer (moved out of initEventListeners)
         document.getElementById('currentDate').textContent = `Today is: ${new Date().toLocaleDateString()}`;
 
-        // Initialize (this will be refactored into an init function later)
+        // 1. Load any saved data (which also calls generateDayGrid and updateDayDisplays)
         loadChallengeData();
 
-        // This is where we will add event listeners in the next step
-        // For now, the old `onclick` attributes still link to these functions.
+        // 2. Attach all event listeners to the DOM elements
+        initEventListeners();
 
     })(); // End of the IIFE
 </script>
