@@ -201,10 +201,10 @@
         </ul>
 
         <div class="status-buttons">
-            <button class="complete-btn" onclick="markDayComplete()">Mark Day <span id="markCompleteDay">1</span> Complete ✅</button>
-            <button class="fail-btn" onclick="markDayFailed()">Mark Day <span id="markFailDay">1</span> Failed ❌</button>
+            <button class="complete-btn" id="markCompleteButton">Mark Day <span id="markCompleteDay">1</span> Complete ✅</button>
+<button class="fail-btn" id="markFailButton">Mark Day <span id="markFailDay">1</span> Failed ❌</button>
         </div>
-         <button class="reset-btn" onclick="resetDailyTasks()" style="margin-top:10px;">Reset Today's Tasks</button>
+         <button class="reset-btn" id="resetDailyTasksButton" style="margin-top:10px;">Reset Today's Tasks</button>
 
         <h2>Progress Grid (75 Days):</h2>
         <div class="day-grid" id="dayGrid">
@@ -213,12 +213,11 @@
         <div class="notes-section">
             <h2>Daily Notes/Reflections for Day <span id="notesDay">1</span>:</h2>
             <textarea id="dailyNotes" placeholder="How did today go? Any challenges or wins?"></textarea>
-            <button onclick="saveNotes()" style="margin-top:10px; padding: 8px 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px;">Save Notes for Day <span id="saveNotesButtonDay">1</span></button>
+            <button id="saveNotesButton" style="margin-top:10px; padding: 8px 12px; background-color: #2196F3; color: white; border: none; border-radius: 4px;">Save Notes for Day <span id="saveNotesButtonDay">1</span></button>
         </div>
 
         <h2>Overall Challenge Management:</h2>
-        <button class="reset-btn" onclick="resetChallengeConfirmation()" style="background-color: #d32f2f; margin-top:10px;">⚠️ Reset Entire Challenge ⚠️</button>
-
+<button class="reset-btn" id="resetEntireChallengeButton" style="background-color: #d32f2f; margin-top:10px;">⚠️ Reset Entire Challenge ⚠️</button>
 
         <div class="footer">
             <p>Good luck with your 75 Hard Challenge! Remember, it's a mental toughness program.</p>
